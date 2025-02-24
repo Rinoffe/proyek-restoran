@@ -6,17 +6,39 @@ struct {
 } pelanggan[100];
 
 void home(){
-    system("cls");
-    cout << "SELAMAT DATANG DI RESTORAN X\n\n";
-    // lanjut
-    system("pause"); system("cls");
+    int kodeHome;
+    
+        system("cls");
+        cout << "SELAMAT DATANG DI RESTORAN X\n\n";
+        cout << "[1] Pesan Menu\n";
+        cout << "[2] Reservasi Kursi\n";
+        cout << "[3] Feedback\n";
+        cout << "[4] Kembali\n";
+        cout << "Pilih: "; cin >> kodeHome;
+        switch (kodeHome){
+            case 1:
+                home();
+            break;
+            case 2:
+                home();
+            break;
+            case 3:
+                home();
+            break;
+            case 4:
+                system("cls");
+            break;
+            default:
+                cout << "\nKode tidak valid\n";
+                system("pause"); system("cls");
+                home();
+        }
 }
 
 void login(int &daftar){
     string nama, usn, pass;
     bool ulangMasuk = 1;
     
-    do{
         system("cls");
         cout << "MASUK\n\n";
         cout << "Username : "; cin >> usn;
@@ -33,14 +55,11 @@ void login(int &daftar){
         if (ulangMasuk){
             cout << "\nGagal masuk\n";
             system("pause"); system("cls");
-        }       
-    } while (ulangMasuk);
+            login(daftar);
+        }
 }
 
 void signup(int &daftar){
-    bool ulangDaftar;
-    do{
-        ulangDaftar = 0;
         system("cls");
         cout << "DAFTAR\n\n";
         cout << "Nama     : "; cin.ignore(); getline(cin, pelanggan[daftar].nama);
@@ -50,40 +69,44 @@ void signup(int &daftar){
         for (int i = 0; i < daftar; i++){
             if (pelanggan[daftar].usn == pelanggan[i].usn){
                 cout << "\nUsername tidak tersedia\n";
-                ulangDaftar = 1;
                 system("pause"); system("cls");
+                signup(daftar);
             }
         }
-    } while (ulangDaftar);
+    
     cout << "\nBerhasil daftar\n";
     daftar++;
     system("pause"); system("cls");
 }
 
-main (){
-    int kodeMasuk, daftar = 0;
+void masuk(int daftar){
+    int kodeMasuk;
 
-    while (true){
-        cout << "SELAMAT DATANG DI RESTORAN X\n\n";
-        cout << "[1] Masuk\n";
-        cout << "[2] Daftar\n";
-        cout << "Pilih : "; cin >> kodeMasuk;
+    cout << "SELAMAT DATANG DI RESTORAN X\n\n";
+    cout << "[1] Masuk\n";
+    cout << "[2] Daftar\n";
+    cout << "Pilih : "; cin >> kodeMasuk;
 
-        switch (kodeMasuk){
-            case 1:
-                if (daftar == 0){
-                    cout << "\nBelum ada pengguna yang terdaftar, mohon daftar terlebih dahulu\n";
-                    system("pause"); system("cls");
-                }else{
-                    login(daftar);
-                }
-            break;
-            case 2:
-                signup(daftar);
-            break;
-            default:
-                cout << "Kode tidak valid\n";
+    switch (kodeMasuk){
+        case 1:
+            if (daftar == 0){
+                cout << "\nBelum ada pengguna yang terdaftar, mohon daftar terlebih dahulu\n";
                 system("pause"); system("cls");
-        }
+            }else{
+                login(daftar);
+            }
+        break;
+        case 2:
+            signup(daftar);
+        break;
+        default:
+            cout << "\nKode tidak valid\n";
+            system("pause"); system("cls");
     }
+    masuk(daftar);
+}
+
+main(){
+    int daftar = 0;
+    masuk(daftar);
 }
