@@ -37,29 +37,40 @@ void home(){
 
 void login(int &daftar){
     string nama, usn, pass;
-    bool ulangMasuk = 1;
+    bool ulangMasuk = 1, admin = 0;
     
-        system("cls");
-        cout << "MASUK\n\n";
-        cout << "Username : "; cin >> usn;
-        cout << "Password : "; cin >> pass;
+    system("cls");
+    cout << "MASUK\n\n";
+    cout << "Username : "; cin >> usn;
+    cout << "Password : "; cin >> pass;
 
+    if (usn == "admin" && pass == "admin123"){
+        ulangMasuk = 0; admin = 1;
+        cout << "lanjut";
+    }else{
         for (int i = 0; i < daftar; i++){
             if ((usn == pelanggan[i].usn) && (pass == pelanggan[i].pass)){
-                cout << "\nBerhasil masuk\n"; system("pause");
+                cout << "\nBerhasil masuk\n";
+                system("pause");
                 ulangMasuk = 0;
                 home();
             }
         }
+    }
 
-        if (ulangMasuk){
-            cout << "\nGagal masuk\n";
-            system("pause"); system("cls");
-            login(daftar);
-        }
+    if ((ulangMasuk) && (daftar != 0)){
+        cout << "\nGagal masuk\n";
+        system("pause"); system("cls");
+        login(daftar);
+    }else if ((daftar == 0) && (!admin)){
+        cout << "\nBelum ada pengguna yang terdaftar, mohon daftar terlebih dahulu\n";
+        system("pause"); system("cls");
+    }        
 }
 
 void signup(int &daftar){
+    bool berhasil = 1;
+
         system("cls");
         cout << "DAFTAR\n\n";
         cout << "Nama     : "; cin.ignore(); getline(cin, pelanggan[daftar].nama);
@@ -69,14 +80,17 @@ void signup(int &daftar){
         for (int i = 0; i < daftar; i++){
             if (pelanggan[daftar].usn == pelanggan[i].usn){
                 cout << "\nUsername tidak tersedia\n";
+                berhasil = 0;
                 system("pause"); system("cls");
                 signup(daftar);
             }
         }
-    
-    cout << "\nBerhasil daftar\n";
-    daftar++;
-    system("pause"); system("cls");
+
+    if (berhasil){
+        cout << "\nBerhasil daftar\n";
+        daftar++;
+        system("pause"); system("cls");
+    }    
 }
 
 void masuk(int daftar){
@@ -89,12 +103,7 @@ void masuk(int daftar){
 
     switch (kodeMasuk){
         case 1:
-            if (daftar == 0){
-                cout << "\nBelum ada pengguna yang terdaftar, mohon daftar terlebih dahulu\n";
-                system("pause"); system("cls");
-            }else{
-                login(daftar);
-            }
+            login(daftar);
         break;
         case 2:
             signup(daftar);
