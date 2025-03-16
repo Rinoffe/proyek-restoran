@@ -77,9 +77,9 @@ void hargaSort(int kodeCari){
     }
 
     if (kodeCari == 4){
-        cout << "Sort Harga Tertinggi\n\n";
+        cout << "Sort Harga Tertinggi\n";
     }else{
-        cout << "Sort Harga Terendah\n\n";
+        cout << "Sort Harga Terendah\n";
     }
     tampilkanMenu();
     system("pause");
@@ -93,10 +93,11 @@ void byJenis(){
     system("cls");
     cout << "Cari Jenis Menu\n\n";
     cout << "Cari : "; cin.ignore(); getline(cin, keyword);
+    cout << endl;
 
     for (int i = 0; i < jmlMenu; i++){
         if (menuRestoran[i].jenis.find(keyword) != string::npos){
-            cout << endl << counter << ". " << menuRestoran[i].nama
+            cout << counter << ". " << menuRestoran[i].nama
                  << " @ Rp. " << menuRestoran[i].harga << endl;
             counter++;
             found = true;
@@ -118,11 +119,13 @@ void byNama(){
     system("cls");
     cout << "Cari Nama Menu\n\n";
     cout << "Cari : "; cin.ignore(); getline(cin, keyword);
+    cout << endl;
 
     for (int i = 0; i < jmlMenu; i++){
         if (menuRestoran[i].nama.find(keyword) != string::npos){
-            cout << endl << counter << ". " << menuRestoran[i].nama
+            cout << counter << ". " << menuRestoran[i].nama
                  << " @ Rp. " << menuRestoran[i].harga << endl;
+            counter++;
             found = true;
         }
     }
