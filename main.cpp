@@ -172,8 +172,65 @@ void cariMenu(){
         system("cls");
     }
 }
+int kodePesan, jmlPesan;
 
+
+    
 void tambahPesan(){
+    int kodePesan[100];
+    int jmlPesan[100];
+    bool ulangPesan = 1;
+    int psn = 1;
+   
+        for(int i = 0; i < psn;i++){
+        tampilkanMenu();
+        cout << "Pesan Menu\n\n";
+        cout << "Pilih menu : "; cin >> kodePesan[i];
+        cout << "Jumlah porsi : "; cin >> jmlPesan[i];
+        if (kodePesan[i] > 0 && kodePesan[i] <= jmlMenu){
+            cout << "\nBerhasil pesan " << menuRestoran[kodePesan[i] - 1].nama
+                 << " sebanyak " << jmlPesan[i] << endl;
+                
+            system("pause");
+            system("cls");
+        }else{
+            cout << "\nKode tidak valid\n";
+            system("pause");
+            system("cls");
+        }
+    cout << "\nPesanan anda berhasil ditambahkan\n";
+    cout << "tambahkan pesanan lain? (y/n) : ";
+    char jawab;
+    cin >> jawab;
+    if (jawab == 'y' || jawab == 'Y'){
+        psn++;
+        
+    }else{
+        cout << "\nPesanan anda berhasil ditambahkan\n";
+    
+    }
+    system("cls");
+    }
+ 
+    // Tampilkan rekap seluruh pesanan
+    int total;
+    cout << "\nRekap Pesanan Anda:\n";
+    cout << "==========================\n";
+    for (int i = 0; i < psn; i++) {
+        int total_harga = jmlPesan[i] * menuRestoran[kodePesan[i] - 1].harga;
+       
+        cout << "nama : " <<  menuRestoran[kodePesan[i] - 1].nama<<endl;
+        cout << "harga pesanan : " << menuRestoran[kodePesan[i] - 1].harga<<endl;
+        cout << "jumlah pesanan : " << jmlPesan[i]<<endl;
+        cout << "total harga pesanan : "<<total_harga<<endl;
+        total += total_harga;
+        cout << " "<< endl;
+    
+    }
+    cout << "total harga pesanan : "<< total <<endl;
+    cout << " "<< endl;
+    cout << "==========================\n";
+    system("pause");
 
 }
 
@@ -214,7 +271,6 @@ void menu(int jmlReservasi){
                 case 2:
                     system("cls");
                     cout << "Menu Restoran\n";
-                    tampilkanMenu();
                     tambahPesan();
                 break;
                 case 3:
@@ -365,4 +421,5 @@ void masuk(int daftar){
 main(){
     int daftar = 0;
     masuk(daftar);
+    home();
 }
