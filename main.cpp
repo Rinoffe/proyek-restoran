@@ -551,7 +551,7 @@ void menuCari(){
 
     while (ulangCari){
         system("cls");
-        cout << "Cari Menu\n\n";
+        cout << "CARI MENU\n\n";
         cout << "[1] Berdasarkan Nama\n"
              << "[2] Berdasarkan Jenis\n"
              << "[3] Filter Harga Terendah\n"
@@ -649,7 +649,7 @@ void menuUtama(){
     
     while (ulangHome){
         system("cls");
-        cout << "SELAMAT DATANG DI RESTORAN X\n";
+        cout << "SELAMAT DATANG DI SAMBODEX DINER\n";
         cout << "\n[1] Pesan Menu"
              << "\n[2] Reservasi Meja"
              << "\n[3] Manage Menu"
@@ -755,7 +755,7 @@ void menuMasuk(){
 
     while (ulangMasuk){
         system("cls");
-        cout << "SELAMAT DATANG DI RESTORAN X\n";
+        cout << "SELAMAT DATANG DI SAMBODEX DINER\n";
         cout << "\n[1] Masuk"
              << "\n[2] Daftar"
              << "\n[3] Keluar\n";
