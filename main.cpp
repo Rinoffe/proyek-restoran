@@ -78,24 +78,33 @@ void taruhTemp(menu temp[]){
 }
 
 void tampilkanMenu(){
+
     system("cls");
     int counter = 1;
-    menu temp[jmlMenu];
 
-    taruhTemp(temp);
+    menu temp[jmlMenu];
+    taruhTemp(temp); 
+
+    menu* ptr = temp; 
 
     cout << "MENU RESTORAN\n";
-    for (int j = 0; j < jmlJenis; j++){
-        cout << endl << jenis[j] << endl;
-        for (int i = 0; i < jmlMenu; i++){
-            if (temp[i].jenis == jenis[j]){
-                cout << counter << ". " << temp[i].nama << " - Rp. " << temp[i].harga << endl;
+
+    for (int j = 0; j < jmlJenis; j++) {
+        cout << endl << jenis[j] << ":\n";
+
+        for (int i = 0; i < jmlMenu; i++) {
+            if ((ptr + i)->jenis == jenis[j]) {
+                cout << counter << ". " 
+                     << (ptr + i)->nama 
+                     << " - Rp. " << (ptr + i)->harga << endl;
                 counter++;
             }
         }
     }
+
     cout << endl;
 }
+
 
 void editMenu(){
     int kodeEdit;
