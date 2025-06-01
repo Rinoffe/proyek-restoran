@@ -9,7 +9,8 @@ using namespace std;
 const int rows = 6, cols = 8;
 const string fileStaff = "data_staff.csv",
              fileSeats = "data_seats.csv",
-             fileMenu = "data_menu.csv";
+             fileMenu = "data_menu.csv",
+             filePesan = "data_pesan.csv";
 
 int jmlStaff = 0, jmlMenu = 0, jmlSeat = 0;
 string seats[rows][cols],
@@ -23,6 +24,10 @@ struct staff{
 struct temp{
     int baris, kolom;
 } tempSeats;
+
+struct pesan{
+    int kode, porsi;
+} dataPesan;
 
 struct menu{
     string nama, jenis;
@@ -48,6 +53,17 @@ void splitFileDataSeats(string line){
     tempSeats.kolom = stoi(kolom);
 }
 
+void splitFileDataPesan(string line){
+    string kode, porsi;
+    stringstream ss(line);
+
+    getline(ss, kode, ',');
+    getline(ss, porsi);
+
+    dataPesan.kode = stoi(kode);
+    dataPesan.porsi = stoi(porsi);
+}
+
 void splitFileDataMenu(string line){
     string harga;
     stringstream ss(line);
@@ -59,57 +75,64 @@ void splitFileDataMenu(string line){
     dataMenu.harga = stoi(harga);
 }
 
-void taruhTemp(menu temp[]){
-    string line, harga;
-    int count = 0;
+void taruhTemp(menu *ptrTemp){
+    string nama, jns, harga, line;
+    menu tempAll[jmlMenu];
+    int total = 0, count = 0;
 
     ifstream fileRead(fileMenu);
     if (fileRead.is_open()){
-        while (getline(fileRead, line)){
+        while (getline(fileRead, line)) {
             stringstream ss(line);
-            getline(ss, temp[count].nama, ',');
-            getline(ss, temp[count].jenis, ',');
-            getline((ss), harga);
-            temp[count].harga = stoi(harga);
-            count++;
+            getline(ss, nama, ',');
+            getline(ss, jns, ',');
+            getline(ss, harga);
+
+            tempAll[total].nama = nama;
+            tempAll[total].jenis = jns;
+            tempAll[total].harga = stoi(harga);
+            total++;
+        }
+        fileRead.close();
+    }
+
+    for (int j = 0; j < jmlJenis; j++) {
+        for (int i = 0; i < total; i++) {
+            if (tempAll[i].jenis == jenis[j]) {
+                *(ptrTemp + count) = tempAll[i];
+                count++;
+            }
         }
     }
-    fileRead.close();
 }
 
 void tampilkanMenu(){
-
     system("cls");
     int counter = 1;
-
     menu temp[jmlMenu];
-    taruhTemp(temp); 
-
-    menu* ptr = temp; 
+    taruhTemp(temp);
 
     cout << "MENU RESTORAN\n";
-
+    cout << left << setfill(' ');
     for (int j = 0; j < jmlJenis; j++) {
         cout << endl << jenis[j] << ":\n";
 
         for (int i = 0; i < jmlMenu; i++) {
-            if ((ptr + i)->jenis == jenis[j]) {
-                cout << counter << ". " 
-                     << (ptr + i)->nama 
-                     << " - Rp. " << (ptr + i)->harga << endl;
+            if (temp[i].jenis == jenis[j]) {
+                cout << counter << ". " << setw(counter > 9 ? 29 : 30) << temp[i].nama << "Rp. " << temp[i].harga << endl;
                 counter++;
             }
         }
     }
-
     cout << endl;
 }
-
 
 void editMenu(){
     int kodeEdit;
     string line, lineKeep;
     bool ulangEdit = 1;
+
+    menu *ptrMenu = &dataMenu;
 
     while (ulangEdit){
         int i = 1;
@@ -120,7 +143,7 @@ void editMenu(){
         if (file.is_open()){
             while(getline(file, line)){
                 splitFileDataMenu(line);
-                cout << i << ". " << dataMenu.nama << endl; i++;
+                cout << i << ". " << ptrMenu->nama << endl; i++;
             }
         }        
         file.close();
@@ -148,14 +171,14 @@ void editMenu(){
 
             while (ulangPilih){
                 system("cls");
-                cout << "[1] Nama menu : " << dataMenu.nama << endl
-                     << "[2] Jenis     : " << dataMenu.jenis << endl
-                     << "[3] Harga     : Rp. " << dataMenu.harga << endl
+                cout << "[1] Nama menu : " << ptrMenu->nama << endl
+                     << "[2] Jenis     : " << ptrMenu->jenis << endl
+                     << "[3] Harga     : Rp. " << ptrMenu->harga << endl
                      << "[4] Keluar\n\n";
                 cout << "Pilih edit : "; cin >> pilihEdit; cin.ignore();
 
                 switch (pilihEdit){
-                    case 1: cout << "\nNama baru : "; getline(cin, nama); dataMenu.nama = nama; break;
+                    case 1: cout << "\nNama baru : "; getline(cin, nama); ptrMenu->nama = nama; break;
                     case 2:
                         cout << endl;
                         for (int i = 0; i < jmlJenis; i++){
@@ -166,9 +189,9 @@ void editMenu(){
                             cout << "\nKode tidak valid\n"; system("pause");
                             break;
                         }
-                        dataMenu.jenis = jenis[kodeJenis - 1];
+                        ptrMenu->jenis = jenis[kodeJenis - 1];
                     break;
-                    case 3: cout << "\nHarga baru : Rp. "; cin >> harga; dataMenu.harga = harga; break;
+                    case 3: cout << "\nHarga baru : Rp. "; cin >> harga; ptrMenu->harga = harga; break;
                     case 4: ulangPilih = 0; break;
                     default:
                         cout << "Kode tidak valid" << endl;
@@ -182,7 +205,7 @@ void editMenu(){
                     if (lineKeep != line){
                         temp[count] = lineKeep; count++;
                     }else{
-                        temp[count] = dataMenu.nama + "," + dataMenu.jenis + "," + to_string(dataMenu.harga);
+                        temp[count] = ptrMenu->nama + "," + ptrMenu->jenis + "," + to_string(ptrMenu->harga);
                         count++;
                     }
                 }
@@ -471,34 +494,27 @@ void menuReservasi(){
     }
 }
 
-void sortHarga(bool sort){
+void sortHarga(bool sortDesc){
     system("cls");
     menu temp[jmlMenu];
-
     taruhTemp(temp);
     
     for (int i = 0; i < jmlMenu - 1; i++){
         for (int j = 0; j < jmlMenu - 1 - i; j++){
-            if (temp[j].jenis == temp[j + 1].jenis){
-                bool tukar = sort ?
-                        (temp[j].harga > temp[j + 1].harga) :
-                        (temp[j].harga < temp[j + 1].harga);
-                if (tukar) swap(temp[j].harga, temp[j + 1].harga);
-            }
+            bool tukar = sortDesc ?
+                         (temp[j].harga > temp[j + 1].harga) :
+                         (temp[j].harga < temp[j + 1].harga);
+            if (tukar) swap(temp[j], temp[j + 1]);
         }
     }
 
-    ofstream fileWrite(fileMenu);
-    if (fileWrite.is_open()){
-        for (int i = 0; i < jmlMenu; i++){
-            fileWrite << temp[i].nama << "," << temp[i].jenis << "," << to_string(temp[i].harga) << endl;
-        }
+    if (sortDesc) cout << "Sort Harga Terendah\n\n";
+    else cout << "Sort Harga Tertinggi\n\n";
+    cout << left << setfill(' ');
+    for (int i = 0; i < jmlMenu; i++){
+        cout << i + 1 << ". " << setw(i > 8 ? 29 : 30) << temp[i].nama << "Rp. " << temp[i].harga << endl;
     }
-    fileWrite.close();
-
-    if (sort) cout << "Sort Harga Tertinggi\n";
-    else cout << "Sort Harga Terendah\n";
-    tampilkanMenu();
+    cout << endl;
     system("pause");
 }
 
@@ -507,8 +523,8 @@ void searchMenu(bool byJenis) {
     int kodeJenis;
     bool found = false;
     string keyword;
-    menu temp[jmlMenu];
 
+    menu temp[jmlMenu];
     taruhTemp(temp);
 
     if (byJenis){
@@ -577,48 +593,62 @@ void menuCari(){
     
 void tambahPesan(){
     system("cls");
-    int total_seluruh = 0;
-    string jawab, submit;
+    int kodeMenu, porsi;
+    string jawab, line;
+    bool ulangPesan;
+
     menu temp[jmlMenu];
-   
     taruhTemp(temp);
 
     do{
-        int psn = 1, kodePesan[psn][2];
+        int total_seluruh = 0;
+        ofstream file(filePesan);
+        file.close();
 
-        for (int i = 0; i < psn; i++){
+        do{
+            ulangPesan = 0;
             cout << "Menu Restoran\n";
             tampilkanMenu();
-            cout << "Pilih menu   : "; cin >> kodePesan[i][0];
-            cout << "Jumlah porsi : "; cin >> kodePesan[i][1];
+            cout << "Pilih menu   : "; cin >> kodeMenu;
+            cout << "Jumlah porsi : "; cin >> porsi;
 
-            if (kodePesan[i][0] > 0 && kodePesan[i][0] <= jmlMenu){
+            if (kodeMenu < 1 || kodeMenu > jmlMenu){
+                cout << "\nKode tidak valid\n";
+                system("pause"); ulangPesan = 1;
+            }
+            
+            ofstream fileWrite(filePesan, ios::app);
+            if (fileWrite.is_open()){
+                fileWrite << kodeMenu - 1 << "," << porsi << endl;
                 cout << "\nPesanan berhasil ditambahkan!\n";
                 cout << "Tambah pesanan lain? (y/n) : "; cin >> jawab;
-                if (jawab == "y" || jawab == "Y") psn++;                
-            }else{
-                cout << "\nKode tidak valid\n";
-                system("pause"); system("cls");
             }
-        }
+            fileWrite.close();   
+
+        }while (jawab == "y" || ulangPesan);
     
         system("cls");
         cout << "FOOD RECEIPT\n";
-        for (int i = 0; i < psn; i++) {
-            int total_satuan = kodePesan[i][1] * temp[kodePesan[i][0] - 1].harga;
-        
-            cout << "\nMenu           : " << temp[kodePesan[i][0] - 1].nama;
-            cout << "\njumlah pesanan : " << kodePesan[i][1];
-            cout << "\nHarga satuan   : Rp. " << temp[kodePesan[i][0] - 1].harga;
-            cout << "\nTotal          : Rp. " << total_satuan << endl;
-            total_seluruh += total_satuan;
-        
-        }
-        if (psn > 1) cout << "\nTotal seluruh  : Rp. " << total_seluruh << endl;
-        cout << endl;
 
-        cout << "Pesanan sudah benar? (y/n) : "; cin >> submit;
-    }while (!(submit == "y" || submit == "Y"));
+        ifstream fileRead(filePesan);
+        if (fileRead.is_open()){
+            while(getline(fileRead, line)){
+                splitFileDataPesan(line);
+                int total_satuan = dataPesan.porsi * temp[dataPesan.kode].harga;
+        
+                cout << "\nMenu           : " << temp[dataPesan.kode].nama;
+                cout << "\nJumlah pesanan : " << dataPesan.porsi;
+                cout << "\nHarga satuan   : Rp. " << temp[dataPesan.kode].harga;
+                cout << "\nTotal          : Rp. " << total_satuan << endl;
+                total_seluruh += total_satuan;
+            }
+        }
+        fileRead.close();
+
+        cout << "\nTotal seluruh  : Rp. " << total_seluruh << endl;
+        cout << "\nPesanan sudah benar? (y/n) : "; cin >> jawab;
+
+    }while (jawab != "y");
 }
 
 void menuPesan(){
@@ -676,6 +706,8 @@ void login(bool &ulangMasuk, int limitLogin){
     string usn, pass, line;
     bool ulangLogin = 1, terdaftar = 0;
 
+    staff *ptrStaff = &dataStaff;
+
     if (jmlStaff == 0) {
         cout << "\nBelum ada pengguna yang terdaftar, mohon daftar terlebih dahulu\n";
         system("pause");
@@ -697,13 +729,13 @@ void login(bool &ulangMasuk, int limitLogin){
         for (int i = 0; i < jmlStaff; i++){
             getline(file, line);
             splitFileDataStaff(line);
-            if (usn == dataStaff.usn && pass == dataStaff.pass){
+            if (usn == ptrStaff->usn && pass == ptrStaff->pass){
                 cout << "\nBerhasil masuk\n";
                 ulangLogin = 0;
                 system("pause");
                 menuUtama();
             }        
-            if (usn == dataStaff.usn) terdaftar = 1;
+            if (usn == ptrStaff->usn) terdaftar = 1;
         }    
 
         if (ulangLogin){
