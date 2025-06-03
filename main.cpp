@@ -364,7 +364,7 @@ void deleteSeat(int &seatSold){
 
     dislplaySeats();
     cout << "\nInput baris & kolom (contoh: 5 7)\n";
-    cout << "Pilih kursi : "; cin >> baris >> kolom;
+    cout << "Pilih Meja : "; cin >> baris >> kolom;
 
     if ((baris < 1 || baris > rows) || (kolom < 1 || kolom > cols)){
         cout << "\nInput tidak valid\n";
@@ -373,7 +373,7 @@ void deleteSeat(int &seatSold){
     }
 
     if (seats[baris - 1][kolom - 1] == "|   "){
-        cout << "\nKursi sudah kosong\n";
+        cout << "\nMeja sudah kosong\n";
         system("pause");
         return;
     }
@@ -406,7 +406,7 @@ void addSeat(int &seatSold){
 
     dislplaySeats();
     cout << "\nInput baris & kolom (contoh: 5 7)\n";
-    cout << "Pilih kursi : "; cin >> baris >> kolom;
+    cout << "Pilih Meja : "; cin >> baris >> kolom;
 
     if ((baris < 1 || baris > rows) || (kolom < 1 || kolom > cols)){
         cout << "\nInput tidak valid\n";
@@ -415,7 +415,7 @@ void addSeat(int &seatSold){
     }
 
     if (seats[baris - 1][kolom - 1] == "| X "){
-        cout << "\nKursi sudah terpakai\n\n";
+        cout << "\nMeja sudah terpakai\n\n";
         system("pause");
         return;
     }
