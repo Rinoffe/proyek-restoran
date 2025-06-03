@@ -366,7 +366,7 @@ void deleteSeat(int &seatSold){
     cout << "\nInput baris & kolom (contoh: 5 7)\n";
     cout << "Pilih kursi : "; cin >> baris >> kolom;
 
-    if ((baris < 1 || baris > rows) && (kolom < 1 || kolom > cols)){
+    if ((baris < 1 || baris > rows) || (kolom < 1 || kolom > cols)){
         cout << "\nInput tidak valid\n";
         system("pause");
         return;
@@ -408,7 +408,7 @@ void addSeat(int &seatSold){
     cout << "\nInput baris & kolom (contoh: 5 7)\n";
     cout << "Pilih kursi : "; cin >> baris >> kolom;
 
-    if ((baris < 1 || baris > rows) && (kolom < 1 || kolom > cols)){
+    if ((baris < 1 || baris > rows) || (kolom < 1 || kolom > cols)){
         cout << "\nInput tidak valid\n";
         system("pause");
         return;
@@ -615,15 +615,15 @@ void tambahPesan(){
             if (kodeMenu < 1 || kodeMenu > jmlMenu){
                 cout << "\nKode tidak valid\n";
                 system("pause"); ulangPesan = 1;
-            }
-            
-            ofstream fileWrite(filePesan, ios::app);
-            if (fileWrite.is_open()){
-                fileWrite << kodeMenu - 1 << "," << porsi << endl;
-                cout << "\nPesanan berhasil ditambahkan!\n";
-                cout << "Tambah pesanan lain? (y/n) : "; cin >> jawab;
-            }
-            fileWrite.close();   
+            }else{
+                ofstream fileWrite(filePesan, ios::app);
+                if (fileWrite.is_open()){
+                    fileWrite << kodeMenu - 1 << "," << porsi << endl;
+                    cout << "\nPesanan berhasil ditambahkan!\n";
+                    cout << "Tambah pesanan lain? (y/n) : "; cin >> jawab;
+                }
+                fileWrite.close();
+            } 
 
         }while (jawab == "y" || ulangPesan);
     
